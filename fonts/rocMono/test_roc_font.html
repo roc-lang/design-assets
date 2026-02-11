@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RocMono Syntax Highlighting Font Test</title>
+<style>
+@font-face {
+  font-family: 'RocMono';
+  src: url('RocMono.woff2') format('woff2');
+}
+
+@font-palette-values --roc-dark {
+  font-family: 'RocMono';
+  base-palette: 1;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: system-ui, sans-serif;
+  padding: 2rem;
+  background: #f5f5f5;
+  color: #333;
+}
+
+h1 { margin-bottom: 1rem; }
+h2 { margin: 2rem 0 0.5rem; font-size: 1.2rem; }
+
+.controls {
+  margin: 1rem 0;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  background: white;
+}
+
+button.active {
+  background: #333;
+  color: white;
+  border-color: #333;
+}
+
+pre {
+  font-family: 'RocMono', 'Iosevka', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 1.5rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin-bottom: 1rem;
+  tab-size: 4;
+  white-space: pre;
+}
+
+pre.light {
+  background: #fafafa;
+  border: 1px solid #e0e0e0;
+}
+
+pre.dark {
+  background: #282c34;
+  font-palette: --roc-dark;
+}
+
+.test-section {
+  margin: 1.5rem 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  background: white;
+}
+
+.test-section h3 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: #666;
+}
+
+.pass { color: green; }
+.fail { color: red; }
+
+.legend {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legend-swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+}
+</style>
+</head>
+<body>
+
+<h1>RocMono Syntax Highlighting Font Test</h1>
+
+<p>This page tests the RocMono font which embeds syntax highlighting via OpenType features.
+Place <code>RocMono.woff2</code> in the same directory as this file.</p>
+
+<div class="controls">
+  <button id="btn-light" class="active" onclick="setTheme('light')">Light Theme</button>
+  <button id="btn-dark" onclick="setTheme('dark')">Dark Theme</button>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-swatch" style="background:#0000ff"></div> Keywords</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#800080"></div> Operators</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#008000"></div> Comments / Strings</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#c18401"></div> Types</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#ff8c00"></div> Numbers</div>
+</div>
+
+<h2>1. Keywords</h2>
+<div class="test-section">
+  <h3>All keywords should be colored (blue in light theme)</h3>
+<pre class="light" id="test-keywords">if True
+else
+match color
+for item in list
+while condition
+return value
+import pf.Stdout
+and
+or
+as
+app
+dbg foo
+expect sum == 15
+break
+crash "error"
+module
+where
+with
+var $count = 0
+hosted
+exposes
+exposing
+generates
+implements
+interface
+packages
+platform
+provides
+requires
+targets
+package</pre>
+</div>
+
+<h2>2. Word Boundary Tests</h2>
+<div class="test-section">
+  <h3>Keywords inside identifiers should NOT be highlighted</h3>
+<pre class="light" id="test-boundaries">iffy = 1
+format = "hello"
+iformatted = 2
+foreground = "blue"
+imported = True
+broken = False
+returning = 0
+whileTrue = 1
+matcher = "a"
+elsewhere = "b"
+platform_name = "web"</pre>
+</div>
+
+<h2>3. Operators</h2>
+<div class="test-section">
+  <h3>Operators should be colored (purple in light theme)</h3>
+<pre class="light" id="test-operators">a + b
+a - b
+a * b
+a / b
+a // b
+a % b
+a == b
+a != b
+a < b
+a <= b
+a > b
+a >= b
+a -> b
+a => b
+a |> b
+a := b
+a :: b
+a ?? b
+a .. b
+a ... b</pre>
+</div>
+
+<h2>4. Comments</h2>
+<div class="test-section">
+  <h3>Everything after # should be green (comment color)</h3>
+<pre class="light" id="test-comments"># This entire line is a comment
+code = 42 # inline comment after code
+# keywords like if else match should be green inside comments
+# operators like + - * should be green inside comments
+# "strings inside comments" should also be green</pre>
+</div>
+
+<h2>5. Strings</h2>
+<div class="test-section">
+  <h3>Text inside quotes should be green (string color)</h3>
+<pre class="light" id="test-strings">name = "hello world"
+msg = "keywords like if and else are inside a string"
+escaped = "she said \"hello\""
+empty = ""
+path = "path/to/file.roc"</pre>
+</div>
+
+<h2>6. Types</h2>
+<div class="test-section">
+  <h3>Uppercase identifiers should be yellow/gold (type color)</h3>
+<pre class="light" id="test-types">name : Str
+count : I64
+items : List(Str)
+flag : Bool
+result : Try(I64, Str)
+color : [Red, Green, Blue]
+Ok(value)
+Err(msg)
+True
+False
+None</pre>
+</div>
+
+<h2>7. Numbers</h2>
+<div class="test-section">
+  <h3>Numeric literals should be orange (number color)</h3>
+<pre class="light" id="test-numbers">x = 42
+y = 3.14
+hex = 0xFF
+octal = 0o77
+binary = 0b1010
+big = 1_000_000
+zero = 0</pre>
+</div>
+
+<h2>8. Full Roc Code Sample</h2>
+<div class="test-section">
+  <h3>Realistic Roc code with mixed syntax</h3>
+<pre class="light" id="test-full">app [main!] { pf: platform "./platform/main.roc" }
+
+import pf.Stdout
+
+# Calculate the sum of a list using a for loop
+for_loop = |num_list| {
+	var $sum = 0
+
+	for num in num_list {
+		$sum = $sum + num
+	}
+
+	$sum
+}
+
+simple_match : [Red, Green, Blue] -> Str
+simple_match = |color| {
+	match color {
+		Red => "The color is red."
+		Green => "The color is green."
+		Blue => "The color is blue."
+	}
+}
+
+number_operators : I64, I64 -> I64
+number_operators = |a, b| {
+	sum = a + b
+	diff = a - b
+	prod = a * b
+	eq = a == b
+	neq = a != b
+	sum
+}
+
+main! = || {
+	Stdout.line!("Hello, world!")
+
+	sum = for_loop([1, 2, 3, 4, 5])
+	expect sum == 15
+
+	# Print the result
+	Stdout.line!(Str.inspect(sum))
+
+	if sum > 10
+		Stdout.line!("Big number")
+	else
+		Stdout.line!("Small number")
+}</pre>
+</div>
+
+<h2>9. Edge Cases</h2>
+<div class="test-section">
+  <h3>Known limitations and edge cases</h3>
+<pre class="light" id="test-edge">
+# Hash inside string (known limitation: will start comment coloring)
+x = "value # not a comment"
+
+# Consecutive strings
+a = "first" "second"
+
+# Operators next to numbers
+result = 42 + 10
+negative = -5
+range = 1..10
+
+# Type annotation on same line as code
+count : I64 = 42
+
+# Multiple keywords on same line
+if True and False or True</pre>
+</div>
+
+<script>
+function setTheme(theme) {
+  const pres = document.querySelectorAll('pre');
+  pres.forEach(pre => {
+    pre.className = theme;
+  });
+  document.getElementById('btn-light').classList.toggle('active', theme === 'light');
+  document.getElementById('btn-dark').classList.toggle('active', theme === 'dark');
+
+  if (theme === 'dark') {
+    document.body.style.background = '#1e1e1e';
+    document.body.style.color = '#ccc';
+    document.querySelectorAll('.test-section').forEach(s => {
+      s.style.background = '#2d2d2d';
+      s.style.borderColor = '#444';
+    });
+  } else {
+    document.body.style.background = '#f5f5f5';
+    document.body.style.color = '#333';
+    document.querySelectorAll('.test-section').forEach(s => {
+      s.style.background = 'white';
+      s.style.borderColor = '#ddd';
+    });
+  }
+}
+</script>
+
+</body>
+</html>
